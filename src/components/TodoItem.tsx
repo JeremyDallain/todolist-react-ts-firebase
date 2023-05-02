@@ -10,19 +10,19 @@ interface Props {
 const style = {
   li: "flex items-center justify-between py-2 border-b",
   liComplete: "flex items-center justify-between py-2 border-b text-gray-500",
-  textComplete: "text-xl ml-4 line-through",
-  text: "text-xl ml-4",
+  textComplete: "text-xl px-4 line-through",
+  text: "text-xl px-4",
 };
 
 const TodoItem = ({ todo, toggleComplete, removeTodo }: Props) => {
   return (
     <li className={todo.completed ? style.liComplete : style.li}>
-      <div className="flex items-center cursor-pointer">
+      <div className="flex items-center cursor-pointer p-2">
         <input
           onChange={() => toggleComplete(todo)}
           type="checkbox"
           checked={todo.completed}
-          className="form-checkbox text-blue-500 cursor-pointer"
+          className="form-checkbox text-blue-500 cursor-pointer mt-1"
         />
         <p
           onClick={() => toggleComplete(todo)}
@@ -31,7 +31,7 @@ const TodoItem = ({ todo, toggleComplete, removeTodo }: Props) => {
           {todo.text}
         </p>
       </div>
-      <button onClick={() => removeTodo(todo.id)}>{<FaRegTrashAlt color="crimson" fontSize="1.1em"/>}</button>
+      <button onClick={() => removeTodo(todo.id)}>{<FaRegTrashAlt className="text-red-600 hover:text-red-400" fontSize="1.1em"/>}</button>
     </li>
   );
 };

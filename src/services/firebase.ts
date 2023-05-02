@@ -1,4 +1,4 @@
-import { db } from '../firebase-config';
+import { db } from '../config/firebase';
 import {
   collection,
   query,
@@ -8,16 +8,16 @@ import {
   deleteDoc,
   doc,
   QuerySnapshot,
+  where,
+  getDocs,
 } from 'firebase/firestore';
 
-// Définissez l'interface Todo pour le typage
 interface Todo {
   id: string;
   text: string;
   completed: boolean;
 }
 
-// Récupérez les todos
 export const getTodos = (callback: (todos: Todo[]) => void) => {
   const q = query(collection(db, 'todos'));
   return onSnapshot(q, (querySnapshot: QuerySnapshot) => {
@@ -29,7 +29,6 @@ export const getTodos = (callback: (todos: Todo[]) => void) => {
   });
 };
 
-// Ajoutez un todo
 export const addTodo = async (text: string): Promise<void> => {
   await addDoc(collection(db, 'todos'), {
     text,
@@ -37,14 +36,20 @@ export const addTodo = async (text: string): Promise<void> => {
   });
 };
 
-// Mettez à jour un todo
 export const updateTodo = async (id: string, completed: boolean): Promise<void> => {
   await updateDoc(doc(db, 'todos', id), {
     completed,
   });
 };
 
-// Supprimez un todo
 export const deleteTodo = async (id: string): Promise<void> => {
   await deleteDoc(doc(db, 'todos', id));
 };
+
+export const deleteCompletedTodos = async (): Promise<void> => {
+  const q = query(collection(db, 'todos'), where('completed', '==', true));
+  const querySnapshot = await getDocs(q);
+  querySnapshot.forEach((todo) => {
+    deleteDoc(doc(db, 'todos', todo.id));
+  });
+}
